@@ -39,6 +39,7 @@
         const Wallet = (props) => <IconWrapper {...props}><path d="M20 12V8H6a2 2 0 0 1-2-2c0-1.1.9-2 2-2h12v4" /><path d="M4 6v12c0 1.1.9 2 2 2h14v-4" /><path d="M18 12a2 2 0 0 0-2 2c0 1.1.9 2 2 2h2v-4Z" /></IconWrapper>;
         const AlertCircle = (props) => <IconWrapper {...props}><circle cx="12" cy="12" r="10" /><line x1="12" x2="12" y1="8" y2="12" /><line x1="12" x2="12.01" y1="16" y2="16" /></IconWrapper>;
         const Plus = (props) => <IconWrapper {...props}><path d="M5 12h14" /><path d="M12 5v14" /></IconWrapper>;
+        const Minus = (props) => <IconWrapper {...props}><path d="M5 12h14" /></IconWrapper>;
         const Trash2 = (props) => <IconWrapper {...props}><path d="M3 6h18" /><path d="M19 6v14c0 1.1-.9 2-2 2H7c-1.1 0-2-.9-2-2V6" /><path d="M8 6V4c0-1.1.9-2 2-2h4c1.1 0 2 .9 2 2v2" /><line x1="10" x2="10" y1="11" y2="17" /><line x1="14" x2="14" y1="11" y2="17" /></IconWrapper>;
         const X = (props) => <IconWrapper {...props}><path d="M18 6 6 18" /><path d="m6 6 12 12" /></IconWrapper>;
         const Pencil = (props) => <IconWrapper {...props}><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" /><path d="m15 5 4 4" /></IconWrapper>;
@@ -177,6 +178,9 @@
             // Warning state: Allocation > 0 BUT Quantity is 0 (Can't afford even one share)
             const isZeroQuantityWarning = stock.allocation > 0 && quantity === 0;
 
+            const increment = () => onUpdate(stock.id, { ...stock, allocation: Math.min(100, stock.allocation + 1) });
+            const decrement = () => onUpdate(stock.id, { ...stock, allocation: Math.max(0, stock.allocation - 1) });
+
             return (
                 <div className={`bg-white rounded-xl shadow-sm border p-4 transition-all hover:shadow-md relative group 
                     ${isZeroQuantityWarning ? 'border-amber-300 ring-1 ring-amber-100' : 
@@ -211,7 +215,11 @@
                     <div className="space-y-3 mb-4">
                         <div className="flex justify-between items-center mb-1.5">
                             <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Allocation</label>
-                            <span className={`text-sm font-bold px-2 py-0.5 rounded ${stock.allocation > 0 ? 'text-indigo-600 bg-indigo-50' : 'text-slate-400 bg-slate-100'}`}>{stock.allocation}%</span>
+                            <div className="flex items-center gap-2">
+                                <button onClick={decrement} className="p-1 hover:bg-slate-100 rounded text-slate-400 hover:text-slate-600 transition-colors"><Minus className="w-3 h-3" /></button>
+                                <span className={`text-sm font-bold px-2 py-0.5 rounded min-w-[3rem] text-center ${stock.allocation > 0 ? 'text-indigo-600 bg-indigo-50' : 'text-slate-400 bg-slate-100'}`}>{stock.allocation}%</span>
+                                <button onClick={increment} className="p-1 hover:bg-slate-100 rounded text-slate-400 hover:text-slate-600 transition-colors"><Plus className="w-3 h-3" /></button>
+                            </div>
                         </div>
                         <input type="range" min="0" max="100" value={stock.allocation} onChange={(e) => onUpdate(stock.id, { ...stock, allocation: Number(e.target.value) })} className={`w-full h-2 rounded-lg appearance-none cursor-pointer ${stock.allocation > 0 ? 'bg-indigo-100 accent-indigo-600' : 'bg-slate-100 accent-slate-400'}`} />
                     </div>
