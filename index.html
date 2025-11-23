@@ -19,10 +19,17 @@
             darkMode: 'class',
             theme: {
                 extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
                     colors: {
-                        slate: {
-                            850: '#1e293b', // Custom dark shade
-                            950: '#020617',
+                        // Customizing the dark palette to be Zinc-based (Neutral/Sharp)
+                        dark: {
+                            bg: '#09090b',      // Zinc 950
+                            card: '#18181b',    // Zinc 900
+                            border: '#27272a',  // Zinc 800
+                            text: '#e4e4e7',    // Zinc 200
+                            muted: '#a1a1aa'    // Zinc 400
                         }
                     }
                 }
@@ -32,25 +39,19 @@
 
     <!-- Lucide Icons -->
     <script type="text/babel">
-        // Icon Components
         const IconWrapper = ({ children, className, onClick }) => (
             <svg 
                 xmlns="http://www.w3.org/2000/svg" 
-                width="24" 
-                height="24" 
-                viewBox="0 0 24 24" 
-                fill="none" 
-                stroke="currentColor" 
-                strokeWidth="2" 
-                strokeLinecap="round" 
-                strokeLinejoin="round" 
-                className={className}
-                onClick={onClick}
+                width="24" height="24" viewBox="0 0 24 24" 
+                fill="none" stroke="currentColor" strokeWidth="2" 
+                strokeLinecap="round" strokeLinejoin="round" 
+                className={className} onClick={onClick}
             >
                 {children}
             </svg>
         );
 
+        // Icons
         const Wallet = (props) => <IconWrapper {...props}><path d="M20 12V8H6a2 2 0 0 1-2-2c0-1.1.9-2 2-2h12v4" /><path d="M4 6v12c0 1.1.9 2 2 2h14v-4" /><path d="M18 12a2 2 0 0 0-2 2c0 1.1.9 2 2 2h2v-4Z" /></IconWrapper>;
         const AlertCircle = (props) => <IconWrapper {...props}><circle cx="12" cy="12" r="10" /><line x1="12" x2="12" y1="8" y2="12" /><line x1="12" x2="12.01" y1="16" y2="16" /></IconWrapper>;
         const Plus = (props) => <IconWrapper {...props}><path d="M5 12h14" /><path d="M12 5v14" /></IconWrapper>;
@@ -71,7 +72,6 @@
         const Sun = (props) => <IconWrapper {...props}><circle cx="12" cy="12" r="4" /><path d="M12 2v2" /><path d="M12 20v2" /><path d="m4.93 4.93 1.41 1.41" /><path d="m17.66 17.66 1.41 1.41" /><path d="M2 12h2" /><path d="M20 12h2" /><path d="m6.34 17.66-1.41 1.41" /><path d="m19.07 4.93-1.41 1.41" /></IconWrapper>;
         const Moon = (props) => <IconWrapper {...props}><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" /></IconWrapper>;
 
-        // App Logic
         const DEFAULT_PORTFOLIO = [
             { id: '1', name: 'HDFC Bank', symbol: 'HDFCBANK', price: 1740.00, allocation: 12, color: '#1d4ed8' }, 
             { id: '2', name: 'Reliance Industries', symbol: 'RELIANCE', price: 1260.00, allocation: 12, color: '#15803d' }, 
@@ -93,9 +93,9 @@
 
             if (activeData.length === 0) {
                 return (
-                    <div className="flex flex-col items-center justify-center h-64 bg-slate-50 dark:bg-slate-800 rounded-xl border border-dashed border-slate-300 dark:border-slate-600">
-                        <PieIcon className="w-10 h-10 text-slate-300 dark:text-slate-500 mb-2" />
-                        <p className="text-slate-400 dark:text-slate-500 text-sm">Add allocations to see chart</p>
+                    <div className="flex flex-col items-center justify-center h-64 bg-slate-50 dark:bg-zinc-900 rounded-xl border border-dashed border-slate-300 dark:border-zinc-700 transition-colors">
+                        <PieIcon className="w-10 h-10 text-slate-300 dark:text-zinc-600 mb-2" />
+                        <p className="text-slate-400 dark:text-zinc-500 text-sm">Add allocations to see chart</p>
                     </div>
                 );
             }
@@ -123,8 +123,8 @@
             const hoveredAmount = hoveredItem ? (totalAmount * hoveredItem.allocation / 100) : 0;
 
             return (
-                <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800">
-                    <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100 mb-6 flex items-center gap-2">
+                <div className="bg-white dark:bg-zinc-900 p-6 rounded-2xl shadow-sm border border-slate-200 dark:border-zinc-800 transition-colors">
+                    <h3 className="text-lg font-bold text-slate-800 dark:text-zinc-100 mb-6 flex items-center gap-2">
                         <PieIcon className="w-5 h-5 text-indigo-600 dark:text-indigo-400" /> Portfolio Distribution
                     </h3>
                     
@@ -138,7 +138,7 @@
                                         fill={slice.color}
                                         stroke="currentColor"
                                         strokeWidth="0.02"
-                                        className="text-white dark:text-slate-900 transition-all duration-300 hover:opacity-90 cursor-pointer"
+                                        className="text-white dark:text-zinc-900 transition-all duration-300 hover:opacity-90 cursor-pointer"
                                         onMouseEnter={() => setHoveredIndex(slice.index)}
                                         onMouseLeave={() => setHoveredIndex(null)}
                                         style={{ 
@@ -148,18 +148,17 @@
                                     />
                                 ))}
                             </svg>
-                            {/* Dynamic Center Info */}
-                            <div className="absolute inset-0 m-auto w-24 h-24 md:w-36 md:h-36 bg-white dark:bg-slate-900 rounded-full flex items-center justify-center flex-col shadow-inner p-2 text-center z-10 pointer-events-none">
+                            <div className="absolute inset-0 m-auto w-24 h-24 md:w-36 md:h-36 bg-white dark:bg-zinc-900 rounded-full flex items-center justify-center flex-col shadow-inner p-2 text-center z-10 pointer-events-none transition-colors">
                                 {hoveredItem ? (
                                     <div className="animate-fade-in">
-                                        <p className="text-[10px] md:text-xs text-slate-500 dark:text-slate-400 font-medium truncate w-full">{hoveredItem.name}</p>
-                                        <p className="text-xl md:text-2xl font-bold text-slate-800 dark:text-slate-100">{hoveredItem.allocation}%</p>
+                                        <p className="text-[10px] md:text-xs text-slate-500 dark:text-zinc-400 font-medium truncate w-full px-1">{hoveredItem.name}</p>
+                                        <p className="text-xl md:text-2xl font-bold text-slate-800 dark:text-zinc-100">{hoveredItem.allocation}%</p>
                                         <p className="text-[10px] md:text-xs font-mono text-indigo-600 dark:text-indigo-400 font-semibold">₹{hoveredAmount.toLocaleString('en-IN', {maximumFractionDigits: 0})}</p>
                                     </div>
                                 ) : (
                                     <div>
-                                        <span className="text-2xl md:text-3xl font-bold text-slate-700 dark:text-slate-200">{total}%</span>
-                                        <p className="text-[10px] text-slate-400 dark:text-slate-500 uppercase tracking-wider">Allocated</p>
+                                        <span className="text-2xl md:text-3xl font-bold text-slate-700 dark:text-zinc-200">{total}%</span>
+                                        <p className="text-[10px] text-slate-400 dark:text-zinc-500 uppercase tracking-wider">Allocated</p>
                                     </div>
                                 )}
                             </div>
@@ -169,15 +168,15 @@
                             {activeData.map((item, idx) => (
                                 <div 
                                     key={item.id} 
-                                    className={`flex items-center justify-between p-1.5 rounded transition-colors ${hoveredIndex === idx ? 'bg-slate-50 dark:bg-slate-800 ring-1 ring-slate-200 dark:ring-slate-700' : ''}`}
+                                    className={`flex items-center justify-between p-1.5 rounded transition-colors ${hoveredIndex === idx ? 'bg-slate-50 dark:bg-zinc-800 ring-1 ring-slate-200 dark:ring-zinc-700' : ''}`}
                                     onMouseEnter={() => setHoveredIndex(idx)}
                                     onMouseLeave={() => setHoveredIndex(null)}
                                 >
                                     <div className="flex items-center gap-2 overflow-hidden">
                                         <span className="w-3 h-3 rounded-full flex-shrink-0" style={{ backgroundColor: item.color || '#cbd5e1' }}></span>
-                                        <span className="truncate text-slate-600 dark:text-slate-300 font-medium" title={item.name}>{item.name}</span>
+                                        <span className="truncate text-slate-600 dark:text-zinc-300 font-medium" title={item.name}>{item.name}</span>
                                     </div>
-                                    <span className="font-bold text-slate-800 dark:text-slate-100 ml-2">{item.allocation}%</span>
+                                    <span className="font-bold text-slate-800 dark:text-zinc-100 ml-2">{item.allocation}%</span>
                                 </div>
                             ))}
                         </div>
@@ -192,99 +191,97 @@
             const actualInvested = quantity * stock.price;
             const leftover = allocatedValue - actualInvested;
             
-            // Visual States
             const isZeroAllocation = stock.allocation === 0;
             const isZeroQuantityWarning = !isZeroAllocation && quantity === 0;
 
             const increment = () => onUpdate(stock.id, { ...stock, allocation: Math.min(100, stock.allocation + 1) });
             const decrement = () => onUpdate(stock.id, { ...stock, allocation: Math.max(0, stock.allocation - 1) });
 
-            // Dynamic Classes
-            let cardBorderClass = 'border-slate-200 dark:border-slate-700';
+            // Dynamic Classes for Neutral Zinc Dark Mode
+            let cardBorderClass = 'border-slate-200 dark:border-zinc-800';
             let cardRingClass = '';
-            let bgClass = 'bg-white dark:bg-slate-900';
+            let bgClass = 'bg-white dark:bg-zinc-900';
             
             if (isZeroAllocation) {
-                cardBorderClass = 'border-dashed border-slate-300 dark:border-slate-700';
-                bgClass = 'bg-slate-50 dark:bg-slate-950/50';
+                cardBorderClass = 'border-dashed border-slate-300 dark:border-zinc-700';
+                bgClass = 'bg-slate-50 dark:bg-zinc-950/50';
             } else if (isZeroQuantityWarning) {
-                cardBorderClass = 'border-amber-300 dark:border-amber-500/50';
-                cardRingClass = 'ring-1 ring-amber-100 dark:ring-amber-900/30';
-                bgClass = 'bg-amber-50/30 dark:bg-amber-950/10';
+                cardBorderClass = 'border-amber-300 dark:border-amber-600/50';
+                cardRingClass = 'ring-1 ring-amber-100 dark:ring-amber-900/40';
+                bgClass = 'bg-amber-50/50 dark:bg-amber-950/20';
             } else {
-                cardBorderClass = 'border-indigo-100 dark:border-indigo-900/50';
+                cardBorderClass = 'border-indigo-100 dark:border-indigo-900/30';
                 cardRingClass = 'ring-1 ring-indigo-50 dark:ring-indigo-900/20';
             }
 
             return (
                 <div className={`rounded-xl shadow-sm border p-4 transition-all hover:shadow-md relative group ${cardBorderClass} ${cardRingClass} ${bgClass}`}>
                     
-                    {/* Index Badge */}
-                    <div className="absolute top-2 right-2 text-[10px] font-bold text-slate-300 dark:text-slate-600 font-mono">
+                    <div className="absolute top-2 right-2 text-[10px] font-bold text-slate-300 dark:text-zinc-600 font-mono">
                         #{index}
                     </div>
 
                     <div className="flex justify-between items-start mb-3 mr-6">
                         <div className="flex items-center gap-3 overflow-hidden">
                             <div 
-                                className={`w-10 h-10 rounded-lg flex-shrink-0 flex items-center justify-center font-bold text-[10px] md:text-xs text-center leading-tight p-1 shadow-sm ${isZeroAllocation ? 'bg-slate-200 text-slate-500 dark:bg-slate-800 dark:text-slate-400' : 'text-white'}`}
+                                className={`h-10 w-auto min-w-[2.5rem] px-1.5 rounded-lg flex-shrink-0 flex items-center justify-center font-bold text-[10px] md:text-xs text-center leading-tight shadow-sm ${isZeroAllocation ? 'bg-slate-200 text-slate-500 dark:bg-zinc-800 dark:text-zinc-500' : 'text-white'}`}
                                 style={!isZeroAllocation ? { backgroundColor: stock.color || '#94a3b8' } : {}}
                             >
                                 {stock.symbol || stock.name.substring(0, 3).toUpperCase()}
                             </div>
                             <div className="min-w-0">
-                                <h3 className={`font-bold leading-tight truncate pr-2 ${isZeroAllocation ? 'text-slate-500 dark:text-slate-400' : 'text-slate-800 dark:text-slate-100'}`}>{stock.name}</h3>
-                                <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
-                                    <span className="font-mono bg-slate-50 dark:bg-slate-800 px-1.5 py-0.5 rounded border border-slate-100 dark:border-slate-700">₹{stock.price.toLocaleString('en-IN')}</span>
+                                <h3 className={`font-bold leading-tight truncate pr-2 ${isZeroAllocation ? 'text-slate-500 dark:text-zinc-500' : 'text-slate-800 dark:text-zinc-100'}`}>{stock.name}</h3>
+                                <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-zinc-400">
+                                    <span className="font-mono bg-slate-50 dark:bg-zinc-950 px-1.5 py-0.5 rounded border border-slate-100 dark:border-zinc-800">₹{stock.price.toLocaleString('en-IN')}</span>
                                 </div>
                             </div>
                         </div>
                         <div className="flex gap-1 flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity focus-within:opacity-100">
-                            <button onClick={() => onEdit(stock)} className="p-2 text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 rounded-lg transition-colors"><Pencil className="w-4 h-4" /></button>
-                            <button onClick={() => onDelete(stock.id)} className="p-2 text-slate-400 hover:text-red-500 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-lg transition-colors"><Trash2 className="w-4 h-4" /></button>
+                            <button onClick={() => onEdit(stock)} className="p-2 text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-zinc-800 rounded-lg transition-colors"><Pencil className="w-4 h-4" /></button>
+                            <button onClick={() => onDelete(stock.id)} className="p-2 text-slate-400 hover:text-red-500 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"><Trash2 className="w-4 h-4" /></button>
                         </div>
                     </div>
 
                     <div className="space-y-3 mb-4">
                         <div className="flex justify-between items-center mb-1.5">
-                            <label className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Allocation</label>
+                            <label className="text-[10px] font-bold text-slate-400 dark:text-zinc-500 uppercase tracking-wider">Allocation</label>
                             <div className="flex items-center gap-2">
-                                <button onClick={decrement} className="p-1 hover:bg-slate-100 dark:hover:bg-slate-800 rounded text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 transition-colors"><Minus className="w-3 h-3" /></button>
-                                <span className={`text-sm font-bold px-2 py-0.5 rounded min-w-[3rem] text-center ${stock.allocation > 0 ? 'text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-900/30' : 'text-slate-400 dark:text-slate-500 bg-slate-100 dark:bg-slate-800'}`}>{stock.allocation}%</span>
-                                <button onClick={increment} className="p-1 hover:bg-slate-100 dark:hover:bg-slate-800 rounded text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 transition-colors"><Plus className="w-3 h-3" /></button>
+                                <button onClick={decrement} className="p-1 hover:bg-slate-100 dark:hover:bg-zinc-800 rounded text-slate-400 dark:text-zinc-500 hover:text-slate-600 dark:hover:text-zinc-300 transition-colors"><Minus className="w-3 h-3" /></button>
+                                <span className={`text-sm font-bold px-2 py-0.5 rounded min-w-[3rem] text-center ${stock.allocation > 0 ? 'text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-900/20' : 'text-slate-400 dark:text-zinc-500 bg-slate-100 dark:bg-zinc-800'}`}>{stock.allocation}%</span>
+                                <button onClick={increment} className="p-1 hover:bg-slate-100 dark:hover:bg-zinc-800 rounded text-slate-400 dark:text-zinc-500 hover:text-slate-600 dark:hover:text-zinc-300 transition-colors"><Plus className="w-3 h-3" /></button>
                             </div>
                         </div>
-                        <input type="range" min="0" max="100" value={stock.allocation} onChange={(e) => onUpdate(stock.id, { ...stock, allocation: Number(e.target.value) })} className={`w-full h-2 rounded-lg appearance-none cursor-pointer ${stock.allocation > 0 ? 'bg-indigo-100 dark:bg-slate-700 accent-indigo-600 dark:accent-indigo-500' : 'bg-slate-100 dark:bg-slate-800 accent-slate-400'}`} />
+                        <input type="range" min="0" max="100" value={stock.allocation} onChange={(e) => onUpdate(stock.id, { ...stock, allocation: Number(e.target.value) })} className={`w-full h-2 rounded-lg appearance-none cursor-pointer ${stock.allocation > 0 ? 'bg-indigo-100 dark:bg-zinc-700 accent-indigo-600 dark:accent-indigo-500' : 'bg-slate-100 dark:bg-zinc-800 accent-slate-400'}`} />
                     </div>
 
-                    <div className={`rounded-lg p-3 grid grid-cols-2 gap-y-3 gap-x-4 border ${isZeroQuantityWarning ? 'bg-amber-50 dark:bg-amber-900/20 border-amber-100 dark:border-amber-900/30' : isZeroAllocation ? 'bg-slate-50 dark:bg-slate-800/50 border-slate-100 dark:border-slate-800' : 'bg-slate-50 dark:bg-slate-800 border-slate-100 dark:border-slate-700'}`}>
-                        <div className={isZeroQuantityWarning ? 'border-r border-amber-200 dark:border-amber-800/30 pr-2' : 'border-r border-slate-200 dark:border-slate-700 pr-2'}>
-                            <p className={`text-[10px] uppercase tracking-wider mb-0.5 ${isZeroQuantityWarning ? 'text-amber-700 dark:text-amber-500 font-bold' : 'text-slate-400 dark:text-slate-500'}`}>Target Allocation</p>
-                            <p className={`font-semibold text-sm ${isZeroQuantityWarning ? 'text-amber-900 dark:text-amber-400' : isZeroAllocation ? 'text-slate-400 dark:text-slate-600' : 'text-indigo-600 dark:text-indigo-400'}`}>₹{allocatedValue.toLocaleString('en-IN', { maximumFractionDigits: 0 })}</p>
+                    <div className={`rounded-lg p-3 grid grid-cols-2 gap-y-3 gap-x-4 border ${isZeroQuantityWarning ? 'bg-amber-50 dark:bg-amber-900/10 border-amber-100 dark:border-amber-900/30' : isZeroAllocation ? 'bg-slate-50 dark:bg-zinc-950/30 border-slate-100 dark:border-zinc-800' : 'bg-slate-50 dark:bg-zinc-950/50 border-slate-100 dark:border-zinc-800'}`}>
+                        <div className={isZeroQuantityWarning ? 'border-r border-amber-200 dark:border-amber-800/30 pr-2' : 'border-r border-slate-200 dark:border-zinc-800 pr-2'}>
+                            <p className={`text-[10px] uppercase tracking-wider mb-0.5 ${isZeroQuantityWarning ? 'text-amber-700 dark:text-amber-500 font-bold' : 'text-slate-400 dark:text-zinc-500'}`}>Target Allocation</p>
+                            <p className={`font-semibold text-sm ${isZeroQuantityWarning ? 'text-amber-900 dark:text-amber-400' : isZeroAllocation ? 'text-slate-400 dark:text-zinc-600' : 'text-indigo-600 dark:text-indigo-400'}`}>₹{allocatedValue.toLocaleString('en-IN', { maximumFractionDigits: 0 })}</p>
                         </div>
                         <div className="text-right pl-2">
-                            <p className={`text-[10px] uppercase tracking-wider mb-0.5 ${isZeroQuantityWarning ? 'text-amber-700 dark:text-amber-500 font-bold' : 'text-slate-400 dark:text-slate-500'}`}>Buy Quantity</p>
-                            <p className={`font-bold text-lg leading-none ${isZeroQuantityWarning ? 'text-amber-600 dark:text-amber-500' : stock.allocation > 0 ? 'text-indigo-600 dark:text-indigo-400' : 'text-slate-300 dark:text-slate-600'}`}>
-                                {quantity} <span className={`text-[10px] font-normal ${isZeroQuantityWarning ? 'text-amber-600 dark:text-amber-500' : 'text-slate-400 dark:text-slate-600'}`}>Qty</span>
+                            <p className={`text-[10px] uppercase tracking-wider mb-0.5 ${isZeroQuantityWarning ? 'text-amber-700 dark:text-amber-500 font-bold' : 'text-slate-400 dark:text-zinc-500'}`}>Buy Quantity</p>
+                            <p className={`font-bold text-lg leading-none ${isZeroQuantityWarning ? 'text-amber-600 dark:text-amber-500' : stock.allocation > 0 ? 'text-indigo-600 dark:text-indigo-400' : 'text-slate-300 dark:text-zinc-600'}`}>
+                                {quantity} <span className={`text-[10px] font-normal ${isZeroQuantityWarning ? 'text-amber-600 dark:text-amber-500' : 'text-slate-400 dark:text-zinc-600'}`}>Qty</span>
                             </p>
                         </div>
                         
                         {isZeroAllocation ? (
-                            <div className="col-span-2 border-t border-slate-200 dark:border-slate-700 pt-2 flex justify-center">
-                                <span className="text-xs font-medium text-slate-400 dark:text-slate-500 flex items-center gap-1">
+                            <div className="col-span-2 border-t border-slate-200 dark:border-zinc-800 pt-2 flex justify-center">
+                                <span className="text-xs font-medium text-slate-400 dark:text-zinc-600 flex items-center gap-1">
                                     <AlertCircle className="w-3 h-3" /> Not Allocated
                                 </span>
                             </div>
                         ) : (
                             <>
-                                <div className={`col-span-2 border-t ${isZeroQuantityWarning ? 'border-amber-200 dark:border-amber-800/30' : 'border-slate-200 dark:border-slate-700'}`}></div>
+                                <div className={`col-span-2 border-t ${isZeroQuantityWarning ? 'border-amber-200 dark:border-amber-800/30' : 'border-slate-200 dark:border-zinc-800'}`}></div>
                                 <div>
-                                    <p className={`text-[10px] uppercase tracking-wider mb-0.5 ${isZeroQuantityWarning ? 'text-amber-700 dark:text-amber-500' : 'text-slate-400 dark:text-slate-500'}`}>Actually Invested</p>
-                                    <p className={`font-medium text-xs ${isZeroQuantityWarning ? 'text-amber-900 dark:text-amber-400' : 'text-slate-700 dark:text-slate-300'}`}>₹{actualInvested.toLocaleString('en-IN')}</p>
+                                    <p className={`text-[10px] uppercase tracking-wider mb-0.5 ${isZeroQuantityWarning ? 'text-amber-700 dark:text-amber-500' : 'text-slate-400 dark:text-zinc-500'}`}>Actually Invested</p>
+                                    <p className={`font-medium text-xs ${isZeroQuantityWarning ? 'text-amber-900 dark:text-amber-400' : 'text-slate-700 dark:text-zinc-300'}`}>₹{actualInvested.toLocaleString('en-IN')}</p>
                                 </div>
                                 <div className="text-right">
-                                    <p className={`text-[10px] uppercase tracking-wider mb-0.5 ${isZeroQuantityWarning ? 'text-amber-700 dark:text-amber-500' : 'text-slate-400 dark:text-slate-500'}`}>Remaining</p>
-                                    <p className={`font-mono text-xs font-medium ${isZeroQuantityWarning ? 'text-amber-900 dark:text-amber-400' : 'text-slate-500 dark:text-slate-400'}`}>₹{leftover.toFixed(0)}</p>
+                                    <p className={`text-[10px] uppercase tracking-wider mb-0.5 ${isZeroQuantityWarning ? 'text-amber-700 dark:text-amber-500' : 'text-slate-400 dark:text-zinc-500'}`}>Remaining</p>
+                                    <p className={`font-mono text-xs font-medium ${isZeroQuantityWarning ? 'text-amber-900 dark:text-amber-400' : 'text-slate-500 dark:text-zinc-400'}`}>₹{leftover.toFixed(0)}</p>
                                 </div>
                             </>
                         )}
@@ -305,18 +302,18 @@
             const handleSubmit = (e) => { e.preventDefault(); onSave({ ...formData, price: Number(formData.price), allocation: Number(formData.allocation) }); onClose(); };
             return (
                 <div className="fixed inset-0 z-50 flex items-end md:items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fade-in">
-                    <div className="bg-white dark:bg-slate-900 w-full max-w-md rounded-2xl p-6 shadow-2xl animate-slide-up border border-slate-200 dark:border-slate-800">
+                    <div className="bg-white dark:bg-zinc-900 w-full max-w-md rounded-2xl p-6 shadow-2xl animate-slide-up border border-slate-200 dark:border-zinc-800">
                         <div className="flex justify-between items-center mb-6">
                             <h2 className="text-xl font-bold text-slate-800 dark:text-white flex items-center gap-2">{initialData ? 'Edit Details' : 'Add Stock'}</h2>
-                            <button onClick={onClose} className="p-2 bg-slate-100 dark:bg-slate-800 rounded-full hover:bg-slate-200 dark:hover:bg-slate-700"><X className="w-5 h-5 text-slate-600 dark:text-slate-400" /></button>
+                            <button onClick={onClose} className="p-2 bg-slate-100 dark:bg-zinc-800 rounded-full hover:bg-slate-200 dark:hover:bg-zinc-700"><X className="w-5 h-5 text-slate-600 dark:text-zinc-400" /></button>
                         </div>
                         <form onSubmit={handleSubmit} className="space-y-5">
-                            <div><label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Stock Name</label><input required type="text" className="w-full p-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-slate-900 dark:text-white" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} /></div>
+                            <div><label className="block text-sm font-medium text-slate-700 dark:text-zinc-300 mb-1">Stock Name</label><input required type="text" className="w-full p-3 bg-slate-50 dark:bg-zinc-950 border border-slate-200 dark:border-zinc-800 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-slate-900 dark:text-white" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} /></div>
                             <div className="grid grid-cols-2 gap-4">
-                                <div><label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Symbol</label><input type="text" className="w-full p-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none uppercase font-mono text-sm text-slate-900 dark:text-white" value={formData.symbol} onChange={e => setFormData({...formData, symbol: e.target.value})} /></div>
-                                <div><label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Price (₹)</label><input required type="number" step="0.01" className="w-full p-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-slate-900 dark:text-white" value={formData.price} onChange={e => setFormData({...formData, price: e.target.value})} /></div>
+                                <div><label className="block text-sm font-medium text-slate-700 dark:text-zinc-300 mb-1">Symbol</label><input type="text" className="w-full p-3 bg-slate-50 dark:bg-zinc-950 border border-slate-200 dark:border-zinc-800 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none uppercase font-mono text-sm text-slate-900 dark:text-white" value={formData.symbol} onChange={e => setFormData({...formData, symbol: e.target.value})} /></div>
+                                <div><label className="block text-sm font-medium text-slate-700 dark:text-zinc-300 mb-1">Price (₹)</label><input required type="number" step="0.01" className="w-full p-3 bg-slate-50 dark:bg-zinc-950 border border-slate-200 dark:border-zinc-800 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-slate-900 dark:text-white" value={formData.price} onChange={e => setFormData({...formData, price: e.target.value})} /></div>
                             </div>
-                            <div><label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Allocation (%)</label><div className="relative"><input required type="number" min="0" max="100" className="w-full p-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none pr-12 text-slate-900 dark:text-white" value={formData.allocation} onChange={e => setFormData({...formData, allocation: e.target.value})} /><span className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 font-bold">%</span></div></div>
+                            <div><label className="block text-sm font-medium text-slate-700 dark:text-zinc-300 mb-1">Allocation (%)</label><div className="relative"><input required type="number" min="0" max="100" className="w-full p-3 bg-slate-50 dark:bg-zinc-950 border border-slate-200 dark:border-zinc-800 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none pr-12 text-slate-900 dark:text-white" value={formData.allocation} onChange={e => setFormData({...formData, allocation: e.target.value})} /><span className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 dark:text-zinc-500 font-bold">%</span></div></div>
                             <button type="submit" className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3.5 rounded-xl mt-2 active:scale-95 transition-all flex items-center justify-center gap-2"><Save className="w-5 h-5" /> Save Changes</button>
                         </form>
                     </div>
@@ -335,10 +332,8 @@
             const [showError, setShowError] = React.useState(false);
             const [copied, setCopied] = React.useState(false);
             
-            // Dark Mode State
             const [darkMode, setDarkMode] = React.useState(false);
             
-            // Toggle Dark Mode
             React.useEffect(() => {
                 if (darkMode) {
                     document.documentElement.classList.add('dark');
@@ -380,7 +375,6 @@
             const handleUpdateStock = (id, updatedStock) => { setStocks(stocks.map(s => s.id === id ? updatedStock : s)); };
             const handleDeleteStock = (id) => { if(window.confirm('Remove this stock from your list?')) setStocks(stocks.filter(s => s.id !== id)); };
             
-            // Import/Export
             const handleExport = () => {
                 const data = { title: dashboardTitle, totalAmount, stocks };
                 const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
@@ -405,7 +399,6 @@
                 };
                 reader.readAsText(file);
             };
-            // Copy Summary
             const handleCopy = () => {
                 const lines = [`*${dashboardTitle} Plan*`, `Total Capital: ₹${totalAmount}`, ''];
                 stocks.filter(s => s.allocation > 0).forEach(s => {
@@ -421,10 +414,9 @@
             };
 
             return (
-                <div className="min-h-screen bg-slate-50 dark:bg-slate-950 font-sans pb-52 md:pb-40 transition-colors duration-300">
+                <div className="min-h-screen bg-slate-50 dark:bg-zinc-950 font-sans pb-52 md:pb-40 transition-colors duration-300">
                     <input type="file" ref={fileInputRef} onChange={handleImportFile} className="hidden" accept=".json" />
                     
-                    {/* Error Toast */}
                     {showError && (
                         <div className="fixed top-4 left-4 right-4 z-50 animate-fade-in flex justify-center">
                             <div className="bg-red-600 text-white px-6 py-4 rounded-xl shadow-2xl flex items-center gap-3 max-w-md w-full">
@@ -438,7 +430,7 @@
                         </div>
                     )}
 
-                    <div className="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 sticky top-0 z-20 shadow-sm transition-colors duration-300">
+                    <div className="bg-white dark:bg-zinc-900 border-b border-slate-200 dark:border-zinc-800 sticky top-0 z-20 shadow-sm transition-colors duration-300">
                         <div className="max-w-5xl mx-auto px-4 py-3 flex justify-between items-center">
                             <div className="flex items-center gap-2">
                                 <div className="bg-indigo-600 p-2 rounded-lg">
@@ -462,25 +454,25 @@
                                             title="Click to rename"
                                         >
                                             {dashboardTitle}
-                                            <Pencil className="w-3 h-3 text-slate-300 dark:text-slate-600 inline" />
+                                            <Pencil className="w-3 h-3 text-slate-300 dark:text-zinc-600 inline" />
                                         </h1>
                                     )}
-                                    <p className="text-[10px] text-slate-500 dark:text-slate-400 font-medium">Smart Allocation Planner</p>
+                                    <p className="text-[10px] text-slate-500 dark:text-zinc-400 font-medium">Smart Allocation Planner</p>
                                 </div>
                             </div>
                             <div className="flex gap-2 items-center">
                                 <button 
                                     onClick={() => setDarkMode(!darkMode)} 
-                                    className="p-2 text-slate-400 dark:text-slate-400 hover:text-yellow-500 dark:hover:text-yellow-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors mr-2" 
+                                    className="p-2 text-slate-400 dark:text-zinc-400 hover:text-yellow-500 dark:hover:text-yellow-300 hover:bg-slate-100 dark:hover:bg-zinc-800 rounded-lg transition-colors mr-2" 
                                     title={darkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
                                 >
                                     {darkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
                                 </button>
-                                <button onClick={handleImportClick} className="p-2 text-slate-400 dark:text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors" title="Import JSON"><Upload className="w-5 h-5" /></button>
-                                <button onClick={handleExport} className="p-2 text-slate-400 dark:text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors" title="Export JSON"><Download className="w-5 h-5" /></button>
-                                <div className="w-px h-8 bg-slate-200 dark:bg-slate-800 mx-1"></div>
-                                <button onClick={() => { if(window.confirm("Reset all stocks to default list?")) setStocks(DEFAULT_PORTFOLIO); }} className="p-2 text-slate-400 dark:text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors" title="Reset Defaults"><RotateCcw className="w-5 h-5" /></button>
-                                <button onClick={handleAddClick} className={`p-2 rounded-lg transition-colors flex items-center gap-1 font-semibold ${summary.totalAllocatedPercent >= 100 ? 'bg-slate-100 dark:bg-slate-800 text-slate-400 cursor-not-allowed' : 'bg-indigo-50 dark:bg-indigo-900 text-indigo-600 dark:text-indigo-300 hover:bg-indigo-100 dark:hover:bg-indigo-800'}`}><Plus className="w-5 h-5" /></button>
+                                <button onClick={handleImportClick} className="p-2 text-slate-400 dark:text-zinc-400 hover:text-slate-600 dark:hover:text-zinc-200 hover:bg-slate-100 dark:hover:bg-zinc-800 rounded-lg transition-colors" title="Import JSON"><Upload className="w-5 h-5" /></button>
+                                <button onClick={handleExport} className="p-2 text-slate-400 dark:text-zinc-400 hover:text-slate-600 dark:hover:text-zinc-200 hover:bg-slate-100 dark:hover:bg-zinc-800 rounded-lg transition-colors" title="Export JSON"><Download className="w-5 h-5" /></button>
+                                <div className="w-px h-8 bg-slate-200 dark:bg-zinc-800 mx-1"></div>
+                                <button onClick={() => { if(window.confirm("Reset all stocks to default list?")) setStocks(DEFAULT_PORTFOLIO); }} className="p-2 text-slate-400 dark:text-zinc-400 hover:text-slate-600 dark:hover:text-zinc-200 hover:bg-slate-100 dark:hover:bg-zinc-800 rounded-lg transition-colors" title="Reset Defaults"><RotateCcw className="w-5 h-5" /></button>
+                                <button onClick={handleAddClick} className={`p-2 rounded-lg transition-colors flex items-center gap-1 font-semibold ${summary.totalAllocatedPercent >= 100 ? 'bg-slate-100 dark:bg-zinc-800 text-slate-400 cursor-not-allowed' : 'bg-indigo-50 dark:bg-indigo-900 text-indigo-600 dark:text-indigo-300 hover:bg-indigo-100 dark:hover:bg-indigo-800'}`}><Plus className="w-5 h-5" /></button>
                             </div>
                         </div>
                     </div>
@@ -499,7 +491,7 @@
 
                         <div className="relative">
                             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-                            <input type="text" placeholder="Search stocks..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="w-full pl-10 pr-4 py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl focus:ring-2 focus:ring-indigo-100 dark:focus:ring-indigo-900 outline-none shadow-sm text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-600 transition-colors" />
+                            <input type="text" placeholder="Search stocks..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="w-full pl-10 pr-4 py-3 bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-xl focus:ring-2 focus:ring-indigo-100 dark:focus:ring-indigo-900 outline-none shadow-sm text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-zinc-600 transition-colors" />
                         </div>
 
                         {isOverAllocated && (
@@ -511,33 +503,33 @@
 
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                             {filteredStocks.map((stock, index) => (<StockCard key={stock.id} stock={stock} totalAmount={totalAmount} onUpdate={handleUpdateStock} onDelete={handleDeleteStock} onEdit={handleEditClick} index={index + 1} />))}
-                            {filteredStocks.length === 0 && (<div className="col-span-full text-center py-12 text-slate-400 dark:text-slate-500"><p>No stocks found matching "{searchTerm}"</p></div>)}
+                            {filteredStocks.length === 0 && (<div className="col-span-full text-center py-12 text-slate-400 dark:text-zinc-500"><p>No stocks found matching "{searchTerm}"</p></div>)}
                         </div>
 
                         <SimplePieChart data={stocks} totalAmount={totalAmount} />
                     </main>
 
-                    <div className="fixed bottom-0 left-0 right-0 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 shadow-[0_-4px_20px_rgba(0,0,0,0.08)] z-20 pb-safe transition-colors duration-300">
+                    <div className="fixed bottom-0 left-0 right-0 bg-white dark:bg-zinc-900 border-t border-slate-200 dark:border-zinc-800 shadow-[0_-4px_20px_rgba(0,0,0,0.08)] z-20 pb-safe transition-colors duration-300">
                         <div className="max-w-5xl mx-auto px-4 py-3">
                             <div className="flex flex-col gap-3">
                                 {/* Bar 1: Allocation Plan */}
                                 <div className="flex items-center gap-3">
-                                    <div className="w-20 text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Allocation</div>
-                                    <div className="flex-1 h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden flex">
+                                    <div className="w-20 text-[10px] font-bold text-slate-400 dark:text-zinc-500 uppercase tracking-wider">Allocation</div>
+                                    <div className="flex-1 h-2 bg-slate-100 dark:bg-zinc-800 rounded-full overflow-hidden flex">
                                         <div className={`h-full transition-all duration-500 ${isOverAllocated ? 'bg-red-500' : 'bg-indigo-600 dark:bg-indigo-500'}`} style={{ width: `${Math.min(summary.totalAllocatedPercent, 100)}%` }} />
                                     </div>
-                                    <span className={`text-xs font-bold w-12 text-right ${isOverAllocated ? 'text-red-500 dark:text-red-400' : 'text-slate-500 dark:text-slate-400'}`}>{summary.totalAllocatedPercent}%</span>
+                                    <span className={`text-xs font-bold w-12 text-right ${isOverAllocated ? 'text-red-500 dark:text-red-400' : 'text-slate-500 dark:text-zinc-400'}`}>{summary.totalAllocatedPercent}%</span>
                                 </div>
                                 {summary.totalAllocatedPercent < 100 && (
-                                    <div className="flex justify-end text-[10px] text-slate-400 dark:text-slate-500 -mt-2 mb-1">
-                                        Unallocated: <span className="font-bold text-slate-600 dark:text-slate-300 ml-1">{100 - summary.totalAllocatedPercent}%</span>
+                                    <div className="flex justify-end text-[10px] text-slate-400 dark:text-zinc-500 -mt-2 mb-1">
+                                        Unallocated: <span className="font-bold text-slate-600 dark:text-zinc-300 ml-1">{100 - summary.totalAllocatedPercent}%</span>
                                     </div>
                                 )}
                                 
                                 {/* Bar 2: Actual Invested */}
                                 <div className="flex items-center gap-3">
-                                    <div className="w-20 text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Invested</div>
-                                    <div className="flex-1 h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                                    <div className="w-20 text-[10px] font-bold text-slate-400 dark:text-zinc-500 uppercase tracking-wider">Invested</div>
+                                    <div className="flex-1 h-2 bg-slate-100 dark:bg-zinc-800 rounded-full overflow-hidden">
                                         <div className="h-full transition-all duration-500 bg-emerald-500" style={{ width: `${Math.min(summary.investedPercent, 100)}%` }} />
                                     </div>
                                     <span className="text-xs font-bold w-12 text-right text-emerald-600 dark:text-emerald-400">{summary.investedPercent.toFixed(1)}%</span>
@@ -546,18 +538,18 @@
                                 <div className="flex justify-between items-end mt-1">
                                     <div className="flex items-center gap-2">
                                         <div>
-                                            <p className="text-[10px] text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-0.5">Total Invested</p>
-                                            <p className="text-lg font-bold text-slate-800 dark:text-slate-200">₹{summary.totalInvested.toLocaleString('en-IN')}</p>
+                                            <p className="text-[10px] text-slate-400 dark:text-zinc-500 uppercase tracking-wider mb-0.5">Total Invested</p>
+                                            <p className="text-lg font-bold text-slate-800 dark:text-zinc-200">₹{summary.totalInvested.toLocaleString('en-IN')}</p>
                                         </div>
                                     </div>
                                     <div className="flex items-end gap-4">
                                         <div className="text-right">
-                                            <p className="text-[10px] text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-0.5">Remaining Cash</p>
+                                            <p className="text-[10px] text-slate-400 dark:text-zinc-500 uppercase tracking-wider mb-0.5">Remaining Cash</p>
                                             <p className={`text-lg font-bold ${remainingCash < 0 ? 'text-red-600 dark:text-red-400' : 'text-emerald-600 dark:text-emerald-400'}`}>₹{remainingCash.toLocaleString('en-IN')}</p>
                                         </div>
                                         <button 
                                             onClick={handleCopy} 
-                                            className="bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 p-3 rounded-xl transition-all active:scale-95"
+                                            className="bg-slate-100 dark:bg-zinc-800 hover:bg-slate-200 dark:hover:bg-zinc-700 text-slate-600 dark:text-zinc-300 p-3 rounded-xl transition-all active:scale-95"
                                             title="Copy Summary to Clipboard"
                                         >
                                             {copied ? <Check className="w-5 h-5 text-emerald-600 dark:text-emerald-400" /> : <Copy className="w-5 h-5" />}
@@ -584,7 +576,7 @@
         .animate-slide-up { animation: slide-up 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
     </style>
 </head>
-<body class="bg-slate-50 dark:bg-slate-950 transition-colors duration-300">
+<body class="bg-slate-50 dark:bg-dark-bg transition-colors duration-300">
     <div id="root"></div>
 </body>
 </html>
