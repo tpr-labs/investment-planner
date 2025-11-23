@@ -168,15 +168,26 @@
             );
         };
 
-        const StockCard = ({ stock, totalAmount, onUpdate, onDelete, onEdit }) => {
+        const StockCard = ({ stock, totalAmount, onUpdate, onDelete, onEdit, index }) => {
             const allocatedValue = (totalAmount * stock.allocation) / 100;
             const quantity = stock.price > 0 ? Math.floor(allocatedValue / stock.price) : 0;
             const actualInvested = quantity * stock.price;
             const leftover = allocatedValue - actualInvested;
             
+            // Warning state: Allocation > 0 BUT Quantity is 0 (Can't afford even one share)
+            const isZeroQuantityWarning = stock.allocation > 0 && quantity === 0;
+
             return (
-                <div className={`bg-white rounded-xl shadow-sm border p-4 transition-all hover:shadow-md relative group ${stock.allocation > 0 ? 'border-indigo-100 ring-1 ring-indigo-50' : 'border-slate-200'}`}>
-                    <div className="flex justify-between items-start mb-3">
+                <div className={`bg-white rounded-xl shadow-sm border p-4 transition-all hover:shadow-md relative group 
+                    ${isZeroQuantityWarning ? 'border-amber-300 ring-1 ring-amber-100' : 
+                      stock.allocation > 0 ? 'border-indigo-100 ring-1 ring-indigo-50' : 'border-slate-200'}`}>
+                    
+                    {/* Index Badge */}
+                    <div className="absolute top-2 right-2 text-[10px] font-bold text-slate-300 font-mono">
+                        #{index}
+                    </div>
+
+                    <div className="flex justify-between items-start mb-3 mr-6">
                         <div className="flex items-center gap-3 overflow-hidden">
                             <div 
                                 className="w-10 h-10 rounded-lg flex-shrink-0 flex items-center justify-center font-bold text-[10px] md:text-xs text-center leading-tight p-1 text-white shadow-sm"
@@ -196,6 +207,7 @@
                             <button onClick={() => onDelete(stock.id)} className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"><Trash2 className="w-4 h-4" /></button>
                         </div>
                     </div>
+
                     <div className="space-y-3 mb-4">
                         <div className="flex justify-between items-center mb-1.5">
                             <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Allocation</label>
@@ -203,23 +215,26 @@
                         </div>
                         <input type="range" min="0" max="100" value={stock.allocation} onChange={(e) => onUpdate(stock.id, { ...stock, allocation: Number(e.target.value) })} className={`w-full h-2 rounded-lg appearance-none cursor-pointer ${stock.allocation > 0 ? 'bg-indigo-100 accent-indigo-600' : 'bg-slate-100 accent-slate-400'}`} />
                     </div>
-                    <div className="bg-slate-50 rounded-lg p-3 grid grid-cols-2 gap-y-3 gap-x-4 border border-slate-100">
-                        <div className="border-r border-slate-200 pr-2">
-                            <p className="text-[10px] text-slate-400 uppercase tracking-wider mb-0.5">Target Allocation</p>
-                            <p className="font-semibold text-indigo-600 text-sm">₹{allocatedValue.toLocaleString('en-IN', { maximumFractionDigits: 0 })}</p>
+
+                    <div className={`rounded-lg p-3 grid grid-cols-2 gap-y-3 gap-x-4 border ${isZeroQuantityWarning ? 'bg-amber-50 border-amber-100' : 'bg-slate-50 border-slate-100'}`}>
+                        <div className={isZeroQuantityWarning ? 'border-r border-amber-200 pr-2' : 'border-r border-slate-200 pr-2'}>
+                            <p className={`text-[10px] uppercase tracking-wider mb-0.5 ${isZeroQuantityWarning ? 'text-amber-700 font-bold' : 'text-slate-400'}`}>Target Allocation</p>
+                            <p className={`font-semibold text-sm ${isZeroQuantityWarning ? 'text-amber-900' : 'text-indigo-600'}`}>₹{allocatedValue.toLocaleString('en-IN', { maximumFractionDigits: 0 })}</p>
                         </div>
                         <div className="text-right pl-2">
-                            <p className="text-[10px] text-slate-400 uppercase tracking-wider mb-0.5">Buy Quantity</p>
-                            <p className={`font-bold text-lg leading-none ${stock.allocation > 0 ? 'text-indigo-600' : 'text-slate-300'}`}>{quantity} <span className="text-[10px] font-normal text-slate-400">Qty</span></p>
+                            <p className={`text-[10px] uppercase tracking-wider mb-0.5 ${isZeroQuantityWarning ? 'text-amber-700 font-bold' : 'text-slate-400'}`}>Buy Quantity</p>
+                            <p className={`font-bold text-lg leading-none ${isZeroQuantityWarning ? 'text-amber-600' : stock.allocation > 0 ? 'text-indigo-600' : 'text-slate-300'}`}>
+                                {quantity} <span className={`text-[10px] font-normal ${isZeroQuantityWarning ? 'text-amber-600' : 'text-slate-400'}`}>Qty</span>
+                            </p>
                         </div>
-                        <div className="col-span-2 border-t border-slate-200"></div>
+                        <div className={`col-span-2 border-t ${isZeroQuantityWarning ? 'border-amber-200' : 'border-slate-200'}`}></div>
                         <div>
-                            <p className="text-[10px] text-slate-400 uppercase tracking-wider mb-0.5">Actually Invested</p>
-                            <p className="font-medium text-slate-700 text-xs">₹{actualInvested.toLocaleString('en-IN')}</p>
+                            <p className={`text-[10px] uppercase tracking-wider mb-0.5 ${isZeroQuantityWarning ? 'text-amber-700' : 'text-slate-400'}`}>Actually Invested</p>
+                            <p className={`font-medium text-xs ${isZeroQuantityWarning ? 'text-amber-900' : 'text-slate-700'}`}>₹{actualInvested.toLocaleString('en-IN')}</p>
                         </div>
                         <div className="text-right">
-                            <p className="text-[10px] text-slate-400 uppercase tracking-wider mb-0.5">Remaining</p>
-                            <p className="font-mono text-xs font-medium text-slate-500">₹{leftover.toFixed(0)}</p>
+                            <p className={`text-[10px] uppercase tracking-wider mb-0.5 ${isZeroQuantityWarning ? 'text-amber-700' : 'text-slate-400'}`}>Remaining</p>
+                            <p className={`font-mono text-xs font-medium ${isZeroQuantityWarning ? 'text-amber-900' : 'text-slate-500'}`}>₹{leftover.toFixed(0)}</p>
                         </div>
                     </div>
                 </div>
@@ -422,7 +437,7 @@
                         )}
 
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                            {filteredStocks.map(stock => (<StockCard key={stock.id} stock={stock} totalAmount={totalAmount} onUpdate={handleUpdateStock} onDelete={handleDeleteStock} onEdit={handleEditClick} />))}
+                            {filteredStocks.map((stock, index) => (<StockCard key={stock.id} stock={stock} totalAmount={totalAmount} onUpdate={handleUpdateStock} onDelete={handleDeleteStock} onEdit={handleEditClick} index={index + 1} />))}
                             {filteredStocks.length === 0 && (<div className="col-span-full text-center py-12 text-slate-400"><p>No stocks found matching "{searchTerm}"</p></div>)}
                         </div>
 
@@ -435,11 +450,16 @@
                                 {/* Bar 1: Allocation Plan */}
                                 <div className="flex items-center gap-3">
                                     <div className="w-20 text-[10px] font-bold text-slate-400 uppercase tracking-wider">Allocation</div>
-                                    <div className="flex-1 h-2 bg-slate-100 rounded-full overflow-hidden">
+                                    <div className="flex-1 h-2 bg-slate-100 rounded-full overflow-hidden flex">
                                         <div className={`h-full transition-all duration-500 ${isOverAllocated ? 'bg-red-500' : 'bg-indigo-600'}`} style={{ width: `${Math.min(summary.totalAllocatedPercent, 100)}%` }} />
                                     </div>
                                     <span className={`text-xs font-bold w-12 text-right ${isOverAllocated ? 'text-red-500' : 'text-slate-500'}`}>{summary.totalAllocatedPercent}%</span>
                                 </div>
+                                {summary.totalAllocatedPercent < 100 && (
+                                    <div className="flex justify-end text-[10px] text-slate-400 -mt-2 mb-1">
+                                        Unallocated: <span className="font-bold text-slate-600 ml-1">{100 - summary.totalAllocatedPercent}%</span>
+                                    </div>
+                                )}
                                 
                                 {/* Bar 2: Actual Invested */}
                                 <div className="flex items-center gap-3">
