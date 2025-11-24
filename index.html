@@ -71,6 +71,7 @@
         const Copy = (props) => <IconWrapper {...props}><rect width="14" height="14" x="8" y="8" rx="2" ry="2" /><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" /></IconWrapper>;
         const Sun = (props) => <IconWrapper {...props}><circle cx="12" cy="12" r="4" /><path d="M12 2v2" /><path d="M12 20v2" /><path d="m4.93 4.93 1.41 1.41" /><path d="m17.66 17.66 1.41 1.41" /><path d="M2 12h2" /><path d="M20 12h2" /><path d="m6.34 17.66-1.41 1.41" /><path d="m19.07 4.93-1.41 1.41" /></IconWrapper>;
         const Moon = (props) => <IconWrapper {...props}><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" /></IconWrapper>;
+        const Share2 = (props) => <IconWrapper {...props}><circle cx="18" cy="5" r="3" /><circle cx="6" cy="12" r="3" /><circle cx="18" cy="19" r="3" /><line x1="8.59" x2="15.42" y1="13.51" y2="17.49" /><line x1="15.41" x2="8.59" y1="6.51" y2="10.49" /></IconWrapper>;
 
         const DEFAULT_PORTFOLIO = [
             { id: '1', name: 'HDFC Bank', symbol: 'HDFCBANK', price: 1740.00, allocation: 12, color: '#1d4ed8' }, 
@@ -322,15 +323,33 @@
         };
 
         const App = () => {
-            const [totalAmount, setTotalAmount] = React.useState(25000);
-            const [stocks, setStocks] = React.useState(DEFAULT_PORTFOLIO);
-            const [dashboardTitle, setDashboardTitle] = React.useState("MonthlyInvest");
+            // Parse URL params for shared state
+            const getUrlState = () => {
+                try {
+                    const params = new URLSearchParams(window.location.search);
+                    const data = params.get('data');
+                    if (data) {
+                        // Decode base64 and handle potential unicode issues
+                        return JSON.parse(decodeURIComponent(escape(atob(data))));
+                    }
+                } catch (e) {
+                    console.error("Failed to load state from URL", e);
+                }
+                return null;
+            };
+
+            const urlState = React.useMemo(() => getUrlState(), []);
+
+            const [totalAmount, setTotalAmount] = React.useState(urlState?.totalAmount || 25000);
+            const [stocks, setStocks] = React.useState(urlState?.stocks || DEFAULT_PORTFOLIO);
+            const [dashboardTitle, setDashboardTitle] = React.useState(urlState?.title || "MonthlyInvest");
             const [isEditingTitle, setIsEditingTitle] = React.useState(false);
             const [isModalOpen, setIsModalOpen] = React.useState(false);
             const [editingStock, setEditingStock] = React.useState(null);
             const [searchTerm, setSearchTerm] = React.useState('');
             const [showError, setShowError] = React.useState(false);
             const [copied, setCopied] = React.useState(false);
+            const [linkCopied, setLinkCopied] = React.useState(false);
             
             const [darkMode, setDarkMode] = React.useState(false);
             
@@ -413,6 +432,19 @@
                 setTimeout(() => setCopied(false), 2000);
             };
 
+            const handleShareLink = () => {
+                const data = { totalAmount, stocks, title: dashboardTitle };
+                const jsonStr = JSON.stringify(data);
+                // Encoding: JSON -> URI Component -> Unescape -> Base64 (handles unicode)
+                const encoded = btoa(unescape(encodeURIComponent(jsonStr)));
+                const url = `${window.location.origin}${window.location.pathname}?data=${encoded}`;
+                
+                navigator.clipboard.writeText(url).then(() => {
+                    setLinkCopied(true);
+                    setTimeout(() => setLinkCopied(false), 2000);
+                });
+            };
+
             return (
                 <div className="min-h-screen bg-slate-50 dark:bg-zinc-950 font-sans pb-52 md:pb-40 transition-colors duration-300">
                     <input type="file" ref={fileInputRef} onChange={handleImportFile} className="hidden" accept=".json" />
@@ -467,6 +499,13 @@
                                     title={darkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
                                 >
                                     {darkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+                                </button>
+                                <button 
+                                    onClick={handleShareLink} 
+                                    className="p-2 text-slate-400 dark:text-zinc-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-slate-100 dark:hover:bg-zinc-800 rounded-lg transition-colors mr-2" 
+                                    title="Share Link (Copy URL)"
+                                >
+                                    {linkCopied ? <Check className="w-5 h-5 text-green-500" /> : <Share2 className="w-5 h-5" />}
                                 </button>
                                 <button onClick={handleImportClick} className="p-2 text-slate-400 dark:text-zinc-400 hover:text-slate-600 dark:hover:text-zinc-200 hover:bg-slate-100 dark:hover:bg-zinc-800 rounded-lg transition-colors" title="Import JSON"><Upload className="w-5 h-5" /></button>
                                 <button onClick={handleExport} className="p-2 text-slate-400 dark:text-zinc-400 hover:text-slate-600 dark:hover:text-zinc-200 hover:bg-slate-100 dark:hover:bg-zinc-800 rounded-lg transition-colors" title="Export JSON"><Download className="w-5 h-5" /></button>
